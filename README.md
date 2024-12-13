@@ -93,3 +93,4 @@ def a2_router(app: FastAPI, serviceA: ServiceA): # 具体注入方式见seatools
     async def serviceA():
         return await serviceA.hello()
 ```
+3. 运行, 具体见`seatools-starter-server-*`, [`seatools-starter-server-uvicorn`](https://gitee.com/seatools-py/seatools-starter-server-uvicorn)
