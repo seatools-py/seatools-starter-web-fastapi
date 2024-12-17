@@ -3,7 +3,7 @@
 该框架必须和`seatools-starter-server-*`的包集成配合使用, 这里以`seatools-starter-server-uvicorn`为例
 
 ## 使用指南
-1. 安装, `poetry add seatools-starter-server-uvicorn seatools-starter-web-fastapi`
+1. 安装, `poetry add fastapi seatools-starter-server-uvicorn seatools-starter-web-fastapi`
 2. 配置`config/application.yml`如下:
 ```yaml
 
