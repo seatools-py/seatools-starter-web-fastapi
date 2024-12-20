@@ -1,33 +1,32 @@
-# Seatools FastAPI Starter
+# seatools fastapi 启动器
 
-This framework must be used in conjunction with the seatools-starter-server-* packages, using seatools-starter-server-uvicorn as an example here.
+该框架必须和`seatools-starter-server-*`的包集成配合使用, 这里以`seatools-starter-server-uvicorn`为例
 
-[中文文档](./README_zh.md)
-
-## Usage Guide
-1. Install with `poetry add fastapi seatools-starter-server-uvicorn seatools-starter-web-fastapi`
-2. Configure `config/application.yml` as follows:
+## 使用指南
+1. 安装, `poetry add fastapi seatools-starter-server-uvicorn seatools-starter-web-fastapi`
+2. 配置`config/application.yml`如下:
 ```yaml
+
 seatools:
   server:
-    # Here are the uvicorn parameter configurations
+    # 此处为uvicorn参数配置
     uvicorn:
       host: 0.0.0.0
       port: 8000
       workers: 1
       reload: true
-  # Here are the FastAPI configurations
+  # 此处为fastapi配置
   fastapi:
     title: xxxxx
     description: xxx
     docs_url: none
 ```
-3. Usage, load by defining ioc container functions
+3. 使用, 通过定义ioc容器函数加载
 ```python
 from seatools.ioc import Autowired, Bean
 from fastapi import FastAPI
 
-# Add middleware
+# 添加中间件, 
 @Bean
 def xxx_middleware(app: FastAPI):
     from fastapi.middleware.cors import CORSMiddleware
@@ -40,16 +39,16 @@ def xxx_middleware(app: FastAPI):
     allow_headers=["*"],
 )
 
-# Add global exception handler
+# 添加全局异常处理
 @Bean
 def global_exception_handler(app: FastAPI):
     
-    # Custom exception handling
+    # 自定义异常处理
     @app.exception_handler(AssertionError)
     async def assert_exception_handler(request, exc):
         ...
 
-# Add route method
+# 添加路由方法
 @Bean
 def xxx_router(app: FastAPI):
     
@@ -57,7 +56,7 @@ def xxx_router(app: FastAPI):
     async def hello():
         return "hello"
 
-# Add route
+# 添加路由
 from fastapi import APIRouter
 custom_router = APIRouter(prefix='/custom')
 
@@ -69,7 +68,8 @@ async def custom_hello():
 def register_custom_router(app: FastAPI):
     app.include_router(custom_router)
 
-# FastAPI integration with seatools ioc injection
+
+# fastapi 与 seatools 的集成注入
 @Bean
 class ServiceA:
     
@@ -81,16 +81,16 @@ class ServiceA:
 def a_router(app: FastAPI):
     
     @app.get('/serviceA')
-    async def serviceA(serviceA = Autowired(cls=ServiceA)): # Inject seatools.ioc in the controller parameter using Autowired, note that the type should not be explicitly declared here, FastAPI will fail on parameter type checking for unsupported types
+    async def serviceA(serviceA = Autowired(cls=ServiceA)): # 在控制器参数中使用Autowired方式注入seatools.ioc, 注意此处不能主动声明类型, fastapi会对参数类型校验不支持的类型将失败
         return await serviceA.hello()
     
-# Or inject at the router level, this method is more recommended
+# 或者在router层注入, 更推荐该方式
 
 @Bean
-def a2_router(app: FastAPI, serviceA: ServiceA): # Specific injection method see seatools
+def a2_router(app: FastAPI, serviceA: ServiceA): # 具体注入方式见seatools
 
     @app.get('/serviceA')
     async def serviceA():
         return await serviceA.hello()
 ```
-3. Run, see `seatools-starter-server-*`, example [`seatools-starter-server-uvicorn`](https://gitee.com/seatools-py/seatools-starter-server-uvicorn)
+3. 运行, 具体见`seatools-starter-server-*`, [`seatools-starter-server-uvicorn`](https://gitee.com/seatools-py/seatools-starter-server-uvicorn)
